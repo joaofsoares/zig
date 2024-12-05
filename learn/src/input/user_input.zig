@@ -1,5 +1,4 @@
 const std = @import("std");
-const ascii = std.ascii;
 
 pub fn getUserInput(allocator: std.mem.Allocator) ![]const u8 {
     const std_in = std.io.getStdIn().reader();
@@ -14,11 +13,10 @@ pub fn getUserInput(allocator: std.mem.Allocator) ![]const u8 {
     var cnt: usize = 0;
 
     for (buffer_input) |character| {
-        if (ascii.isAlphabetic(character)) {
+        if (std.ascii.isAlphabetic(character)) {
             cnt += 1;
         }
     }
 
-    const result: []u8 = buffer_input[0..cnt];
-    return try allocator.dupe(u8, result);
+    return try allocator.dupe(u8, buffer_input[0..cnt]);
 }
