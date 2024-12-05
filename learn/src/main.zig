@@ -1,5 +1,6 @@
 const std = @import("std");
 const User = @import("model/user.zig").User;
+const UserInput = @import("input/user_input.zig");
 
 pub fn main() !void {
     var u = User.init("Goku", 9001);
@@ -27,4 +28,8 @@ pub fn main() !void {
     defer allocator.destroy(user);
     std.debug.print("User Type: {any}\n", .{@TypeOf(user)});
     std.debug.print("Pointer: User[Name={s},Power={d}]\n", .{ user.name, user.power });
+
+    const user_input = try UserInput.getUserInput(allocator);
+    defer allocator.free(user_input);
+    std.debug.print("User Input: {s}\n", .{user_input});
 }
