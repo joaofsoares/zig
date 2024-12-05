@@ -32,4 +32,5 @@ pub fn main() !void {
     const user_input = try UserInput.getUserInput(allocator);
     defer allocator.free(user_input);
     std.debug.print("User Input: {s}\n", .{user_input});
+    std.debug.print("User Input Length: {d}\n", .{user_input.len});
 }
