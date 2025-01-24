@@ -2,8 +2,6 @@ const std = @import("std");
 const testing = std.testing;
 const expectApproxEqAbs = std.testing.expectApproxEqAbs;
 
-const earth_seconds_per_year: f64 = 31557600.0;
-
 pub const Planet = enum {
     mercury,
     venus,
@@ -15,7 +13,9 @@ pub const Planet = enum {
     neptune,
 
     pub fn age(self: Planet, seconds: usize) f64 {
+        const earth_seconds_per_year: f64 = 31557600.0;
         const converted_seconds: f64 = @floatFromInt(seconds);
+
         return switch (self) {
             Planet.mercury => converted_seconds / 0.2408467 / earth_seconds_per_year,
             Planet.venus => converted_seconds / 0.61519726 / earth_seconds_per_year,
