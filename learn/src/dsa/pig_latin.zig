@@ -8,7 +8,7 @@ pub fn translate(allocator: mem.Allocator, phrase: []const u8) mem.Allocator.Err
 
     const endStr = "ay";
 
-    var it = mem.split(u8, phrase, " ");
+    var it = mem.splitSequence(u8, phrase, " ");
 
     var currIdx: usize = 0;
     var endIdx: usize = 0;

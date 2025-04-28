@@ -3,11 +3,11 @@ const mem = std.mem;
 const testing = std.testing;
 
 pub fn rows(allocator: mem.Allocator, count: usize) mem.Allocator.Error![][]u128 {
-    if (count == 0) {
-        return try allocator.alloc([]u128, count);
-    }
-
     var mat = try allocator.alloc([]u128, count);
+
+    if (count == 0) {
+        return mat;
+    }
 
     for (0..count) |row| {
         var arr = try allocator.alloc(u128, (row + 1));
@@ -36,11 +36,9 @@ fn free(slices: [][]u128) void {
 
 test "zero rows" {
     const expected = try testing.allocator.alloc([]const u128, 0);
-
     defer testing.allocator.free(expected);
 
     const actual = try rows(testing.allocator, 0);
-
     defer free(actual);
 
     try testing.expectEqual(expected.len, actual.len);
