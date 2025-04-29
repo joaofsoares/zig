@@ -1,45 +1,35 @@
-// TODO: rework
-
 const std = @import("std");
 const testing = std.testing;
 
-const lyrics =
-    \\On the first day of Christmas my true love gave to me: a Partridge in a Pear Tree.
-    \\On the second day of Christmas my true love gave to me: two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the third day of Christmas my true love gave to me: three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the fourth day of Christmas my true love gave to me: four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the fifth day of Christmas my true love gave to me: five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the sixth day of Christmas my true love gave to me: six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the seventh day of Christmas my true love gave to me: seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the eighth day of Christmas my true love gave to me: eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the ninth day of Christmas my true love gave to me: nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the tenth day of Christmas my true love gave to me: ten Lords-a-Leaping, nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the eleventh day of Christmas my true love gave to me: eleven Pipers Piping, ten Lords-a-Leaping, nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-    \\On the twelfth day of Christmas my true love gave to me: twelve Drummers Drumming, eleven Pipers Piping, ten Lords-a-Leaping, nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree.
-;
-
 pub fn recite(buffer: []u8, start_verse: u32, end_verse: u32) []const u8 {
-    var cnt: usize = 1;
-    var start_idx: usize = 0;
-    var end_idx: usize = 0;
-    var standard_start_idx: usize = 0;
+    var idx: usize = 0;
 
-    while (cnt <= end_verse) : (cnt += 1) {
-        if (cnt < start_verse) {
-            start_idx = std.mem.indexOfPos(u8, lyrics, start_idx + 1, "\n").?;
-        } else if (cnt == start_verse) {
-            standard_start_idx = if (lyrics[start_idx] == '\n') (start_idx + 1) else start_idx;
-            end_idx = std.mem.indexOfPos(u8, lyrics, start_idx + 1, "\n") orelse lyrics.len;
-        } else if (cnt <= end_verse) {
-            start_idx = std.mem.indexOfPos(u8, lyrics, end_idx, "\n").?;
-            end_idx = std.mem.indexOfPos(u8, lyrics, start_idx + 1, "\n") orelse lyrics.len;
-        }
+    for (start_verse..(end_verse + 1)) |i| {
+        idx += switch (i) {
+            1 => add_str(buffer, idx, "On the first day of Christmas my true love gave to me: a Partridge in a Pear Tree."),
+            2 => add_str(buffer, idx, "On the second day of Christmas my true love gave to me: two Turtle Doves, and a Partridge in a Pear Tree."),
+            3 => add_str(buffer, idx, "On the third day of Christmas my true love gave to me: three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            4 => add_str(buffer, idx, "On the fourth day of Christmas my true love gave to me: four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            5 => add_str(buffer, idx, "On the fifth day of Christmas my true love gave to me: five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            6 => add_str(buffer, idx, "On the sixth day of Christmas my true love gave to me: six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            7 => add_str(buffer, idx, "On the seventh day of Christmas my true love gave to me: seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            8 => add_str(buffer, idx, "On the eighth day of Christmas my true love gave to me: eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            9 => add_str(buffer, idx, "On the ninth day of Christmas my true love gave to me: nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            10 => add_str(buffer, idx, "On the tenth day of Christmas my true love gave to me: ten Lords-a-Leaping, nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            11 => add_str(buffer, idx, "On the eleventh day of Christmas my true love gave to me: eleven Pipers Piping, ten Lords-a-Leaping, nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            12 => add_str(buffer, idx, "On the twelfth day of Christmas my true love gave to me: twelve Drummers Drumming, eleven Pipers Piping, ten Lords-a-Leaping, nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."),
+            else => 0,
+        };
+
+        idx += if (i < end_verse) add_str(buffer, idx, "\n") else 0;
     }
 
-    const result = lyrics[standard_start_idx..end_idx];
-    @memcpy(buffer[0..result.len], result);
+    return buffer[0..idx];
+}
 
-    return buffer[0..result.len];
+fn add_str(buffer: []u8, idx: usize, str: []const u8) usize {
+    @memcpy(buffer[idx..(idx + str.len)], str);
+    return str.len;
 }
 
 test "verse-first day a partridge in a pear tree" {
