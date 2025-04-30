@@ -1,45 +1,35 @@
-// TODO: rework
-
 const std = @import("std");
 const testing = std.testing;
 
-const str =
-    \\This is the house that Jack built.
-    \\This is the malt that lay in the house that Jack built.
-    \\This is the rat that ate the malt that lay in the house that Jack built.
-    \\This is the cat that killed the rat that ate the malt that lay in the house that Jack built.
-    \\This is the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.
-    \\This is the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.
-    \\This is the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.
-    \\This is the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.
-    \\This is the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.
-    \\This is the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.
-    \\This is the farmer sowing his corn that kept the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.
-    \\This is the horse and the hound and the horn that belonged to the farmer sowing his corn that kept the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.
-;
-
 pub fn recite(buffer: []u8, start_verse: u32, end_verse: u32) []const u8 {
-    var cnt: usize = 1;
-    var start_idx: usize = 0;
-    var end_idx: usize = 0;
-    var standard_start_idx: usize = 0;
+    var idx: usize = 0;
 
-    while (cnt <= end_verse) : (cnt += 1) {
-        if (cnt < start_verse) {
-            start_idx = std.mem.indexOfPos(u8, str, start_idx + 1, "\n").?;
-        } else if (cnt == start_verse) {
-            standard_start_idx = if (str[start_idx] == '\n') (start_idx + 1) else start_idx;
-            end_idx = std.mem.indexOfPos(u8, str, start_idx + 1, "\n") orelse str.len;
-        } else if (cnt <= end_verse) {
-            start_idx = std.mem.indexOfPos(u8, str, end_idx, "\n").?;
-            end_idx = std.mem.indexOfPos(u8, str, start_idx + 1, "\n") orelse str.len;
-        }
+    for (start_verse..(end_verse + 1)) |i| {
+        idx += switch (i) {
+            1 => add_str(buffer, idx, "This is the house that Jack built."),
+            2 => add_str(buffer, idx, "This is the malt that lay in the house that Jack built."),
+            3 => add_str(buffer, idx, "This is the rat that ate the malt that lay in the house that Jack built."),
+            4 => add_str(buffer, idx, "This is the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            5 => add_str(buffer, idx, "This is the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            6 => add_str(buffer, idx, "This is the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            7 => add_str(buffer, idx, "This is the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            8 => add_str(buffer, idx, "This is the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            9 => add_str(buffer, idx, "This is the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            10 => add_str(buffer, idx, "This is the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            11 => add_str(buffer, idx, "This is the farmer sowing his corn that kept the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            12 => add_str(buffer, idx, "This is the horse and the hound and the horn that belonged to the farmer sowing his corn that kept the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            else => unreachable,
+        };
+
+        idx += if (i < end_verse) add_str(buffer, idx, "\n") else 0;
     }
 
-    const result = str[standard_start_idx..end_idx];
-    @memcpy(buffer[0..result.len], result);
+    return buffer[0..idx];
+}
 
-    return buffer[0..result.len];
+fn add_str(buffer: []u8, idx: usize, str: []const u8) usize {
+    @memcpy(buffer[idx..(idx + str.len)], str);
+    return str.len;
 }
 
 test "verse one - the house that jack built" {
