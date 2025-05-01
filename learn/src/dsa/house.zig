@@ -1,23 +1,38 @@
 const std = @import("std");
 const testing = std.testing;
 
+const Item = enum {
+    House,
+    Malt,
+    Rat,
+    Cat,
+    Dog,
+    Cow,
+    Maiden,
+    Man,
+    Priest,
+    Rooster,
+    Farmer,
+    Horse,
+};
+
 pub fn recite(buffer: []u8, start_verse: u32, end_verse: u32) []const u8 {
     var idx: usize = 0;
 
     for (start_verse..(end_verse + 1)) |i| {
         idx += switch (i) {
-            1 => add_str(buffer, idx, "This is the house that Jack built."),
-            2 => add_str(buffer, idx, "This is the malt that lay in the house that Jack built."),
-            3 => add_str(buffer, idx, "This is the rat that ate the malt that lay in the house that Jack built."),
-            4 => add_str(buffer, idx, "This is the cat that killed the rat that ate the malt that lay in the house that Jack built."),
-            5 => add_str(buffer, idx, "This is the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
-            6 => add_str(buffer, idx, "This is the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
-            7 => add_str(buffer, idx, "This is the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
-            8 => add_str(buffer, idx, "This is the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
-            9 => add_str(buffer, idx, "This is the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
-            10 => add_str(buffer, idx, "This is the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
-            11 => add_str(buffer, idx, "This is the farmer sowing his corn that kept the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
-            12 => add_str(buffer, idx, "This is the horse and the hound and the horn that belonged to the farmer sowing his corn that kept the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built."),
+            1 => add_str(buffer, idx, create_verse(Item.House)),
+            2 => add_str(buffer, idx, create_verse(Item.Malt)),
+            3 => add_str(buffer, idx, create_verse(Item.Rat)),
+            4 => add_str(buffer, idx, create_verse(Item.Cat)),
+            5 => add_str(buffer, idx, create_verse(Item.Dog)),
+            6 => add_str(buffer, idx, create_verse(Item.Cow)),
+            7 => add_str(buffer, idx, create_verse(Item.Maiden)),
+            8 => add_str(buffer, idx, create_verse(Item.Man)),
+            9 => add_str(buffer, idx, create_verse(Item.Priest)),
+            10 => add_str(buffer, idx, create_verse(Item.Rooster)),
+            11 => add_str(buffer, idx, create_verse(Item.Farmer)),
+            12 => add_str(buffer, idx, create_verse(Item.Horse)),
             else => unreachable,
         };
 
@@ -30,6 +45,23 @@ pub fn recite(buffer: []u8, start_verse: u32, end_verse: u32) []const u8 {
 fn add_str(buffer: []u8, idx: usize, str: []const u8) usize {
     @memcpy(buffer[idx..(idx + str.len)], str);
     return str.len;
+}
+
+fn create_verse(item: Item) []const u8 {
+    return switch (item) {
+        Item.House => "This is the house that Jack built.",
+        Item.Malt => "This is the malt that lay in the house that Jack built.",
+        Item.Rat => "This is the rat that ate the malt that lay in the house that Jack built.",
+        Item.Cat => "This is the cat that killed the rat that ate the malt that lay in the house that Jack built.",
+        Item.Dog => "This is the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.",
+        Item.Cow => "This is the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.",
+        Item.Maiden => "This is the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.",
+        Item.Man => "This is the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.",
+        Item.Priest => "This is the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.",
+        Item.Rooster => "This is the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.",
+        Item.Farmer => "This is the farmer sowing his corn that kept the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.",
+        Item.Horse => "This is the horse and the hound and the horn that belonged to the farmer sowing his corn that kept the rooster that crowed in the morn that woke the priest all shaven and shorn that married the man all tattered and torn that kissed the maiden all forlorn that milked the cow with the crumpled horn that tossed the dog that worried the cat that killed the rat that ate the malt that lay in the house that Jack built.",
+    };
 }
 
 test "verse one - the house that jack built" {
