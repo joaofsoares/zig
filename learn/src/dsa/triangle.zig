@@ -9,7 +9,11 @@ pub const Triangle = struct {
     side_c: f64,
 
     pub fn init(a: f64, b: f64, c: f64) TriangleError!Triangle {
-        if ((a != 0 and b != 0 and c != 0) and (a + b >= c) and (b + c >= a) and (a + c >= b)) {
+        if ((a != 0 and b != 0 and c != 0) and
+            (a + b >= c) and
+            (b + c >= a) and
+            (a + c >= b))
+        {
             return Triangle{
                 .side_a = a,
                 .side_b = b,
@@ -25,11 +29,15 @@ pub const Triangle = struct {
     }
 
     pub fn isIsosceles(self: Triangle) bool {
-        return (((self.side_a == self.side_b) or (self.side_a == self.side_c)) or ((self.side_b == self.side_a) or (self.side_b == self.side_c)) or ((self.side_c == self.side_a) or (self.side_c == self.side_b)));
+        return (self.side_a == self.side_b) or
+            (self.side_a == self.side_c) or
+            (self.side_b == self.side_c);
     }
 
     pub fn isScalene(self: Triangle) bool {
-        return (self.side_a != self.side_b and self.side_a != self.side_c and self.side_b != self.side_c);
+        return (self.side_a != self.side_b and
+            self.side_a != self.side_c and
+            self.side_b != self.side_c);
     }
 };
 
