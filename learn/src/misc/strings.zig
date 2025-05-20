@@ -22,6 +22,9 @@ pub fn main() !void {
     const init = "initial str";
     const concated_str = try concat_str(init, ", rest of str");
     std.debug.print("concated str = {s}\n", .{concated_str});
+
+    const small_str = try std.fmt.allocPrint(allocator, "{s}", .{"small"});
+    std.debug.print("small_str={s}\n", .{small_str});
 }
 
 fn add_to_array(arr: *std.ArrayList(u8), n: u8) !void {
