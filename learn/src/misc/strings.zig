@@ -25,6 +25,9 @@ pub fn main() !void {
 
     const small_str = try std.fmt.allocPrint(allocator, "{s}", .{"small"});
     std.debug.print("small_str={s}\n", .{small_str});
+
+    const another_concat = another_concat_str("hello", " there!");
+    std.debug.print("another_concat={s}\n", .{another_concat});
 }
 
 fn add_to_array(arr: *std.ArrayList(u8), n: u8) !void {
@@ -43,4 +46,8 @@ fn add_str_buffer(buffer: []u8, s: []const u8, rest: []const u8) ![]u8 {
 fn concat_str(head: []const u8, rest: []const u8) ![]u8 {
     var small_buffer: [50]u8 = undefined;
     return try std.fmt.bufPrint(&small_buffer, "{s}{s}", .{ head, rest });
+}
+
+fn another_concat_str(comptime head: []const u8, comptime tail: []const u8) []const u8 {
+    return head ++ tail;
 }
