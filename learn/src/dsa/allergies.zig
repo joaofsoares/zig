@@ -2,20 +2,20 @@ const std = @import("std");
 const EnumSet = std.EnumSet;
 const testing = std.testing;
 
-pub const Allergen = enum(u8) {
-    eggs = 1,
-    peanuts = 2,
-    shellfish = 4,
-    strawberries = 8,
-    tomatoes = 16,
-    chocolate = 32,
-    pollen = 64,
-    cats = 128,
+pub const Allergen = enum {
+    eggs,
+    peanuts,
+    shellfish,
+    strawberries,
+    tomatoes,
+    chocolate,
+    pollen,
+    cats,
 };
 
 pub fn isAllergicTo(score: u8, allergen: Allergen) bool {
-    const allergens = initAllergenSet(score);
-    return allergens.contains(allergen);
+    const allergies = initAllergenSet(score);
+    return allergies.contains(allergen);
 }
 
 pub fn initAllergenSet(score: usize) EnumSet(Allergen) {
