@@ -8,6 +8,11 @@ pub fn main() !void {
 
     try map.put("one", 1);
 
-    const result = map.get("one").?;
-    std.debug.print("result = {d}\n", .{result});
+    if (map.get("one")) |one| {
+        std.debug.print("one = {d}\n", .{one});
+    }
+
+    if (map.get("two")) |two| {
+        std.debug.print("two= {d}\n", .{two});
+    }
 }
