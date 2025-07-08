@@ -15,10 +15,15 @@ pub fn isBalanced(allocator: mem.Allocator, s: []const u8) !bool {
 
     for (s) |c| {
         if (c == ']' or c == '}' or c == ')') {
-            const opposite = map.get(c) orelse return false;
-            const last = brackets.pop() orelse return false;
-
-            if (last != opposite) {
+            if (map.get(c)) |opposite| {
+                if (brackets.pop()) |last| {
+                    if (last != opposite) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
                 return false;
             }
         } else if (c == '[' or c == '{' or c == '(') {
