@@ -1,4 +1,5 @@
 const std = @import("std");
+const testing = std.testing;
 
 pub fn three_sum(allocator: std.mem.Allocator, comptime T: type, numbers: []const T) ![][]T {
     if (numbers.len < 3) return &.{};
@@ -57,4 +58,59 @@ fn clear_memory(allocator: std.mem.Allocator, arr: [][]i32) void {
     }
 
     allocator.free(arr);
+}
+
+test "example 1" {
+    const allocator = std.testing.allocator;
+
+    const input = [_]i32{ -1, 0, 1, 2, -1, -4 };
+    const expected = [_][3]i32{
+        [_]i32{ -1, -1, 2 },
+        [_]i32{ -1, 0, 1 },
+    };
+
+    const actual = try three_sum(allocator, i32, &input);
+
+    defer clear_memory(allocator, actual);
+
+    try testing.expectEqual(2, actual.len);
+
+    for (0..2) |i| {
+        for (0..3) |j| {
+            try testing.expectEqual(expected[i][j], actual[i][j]);
+        }
+    }
+}
+
+test "example 2" {
+    const allocator = std.testing.allocator;
+
+    const input = [_]i32{ 0, 1, 1 };
+    const expected = &.{};
+    const actual = try three_sum(allocator, i32, &input);
+
+    defer clear_memory(allocator, actual);
+
+    try testing.expectEqual(expected.len, actual.len);
+}
+
+test "example 3" {
+    const allocator = std.testing.allocator;
+
+    const input = [_]i32{ 0, 0, 0 };
+    const expected = [_][3]i32{
+        [_]i32{ 0, 0, 0 },
+    };
+
+    const actual = try three_sum(allocator, i32, &input);
+
+    defer clear_memory(allocator, actual);
+
+    try testing.expectEqual(1, actual.len);
+
+    for (0..1) |i| {
+        for (0..3) |j| {
+            try testing.expectEqual(expected[i][j], actual[i][j]);
+        }
+    }
 }
