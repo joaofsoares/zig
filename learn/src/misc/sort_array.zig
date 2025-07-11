@@ -4,7 +4,7 @@ const testing = std.testing;
 fn sort_array(allocator: std.mem.Allocator, arr: []const i8) ![]i8 {
     const sorted_array = try allocator.alloc(i8, arr.len);
 
-    @memcpy(sorted_array, arr[0..]);
+    @memcpy(sorted_array, arr);
 
     std.mem.sort(i8, sorted_array, {}, std.sort.asc(i8));
 
