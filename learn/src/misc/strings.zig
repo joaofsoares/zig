@@ -23,6 +23,9 @@ pub fn main() !void {
     const concated_str = try concat_str(init, ", rest of str");
     std.debug.print("concated str = {s}\n", .{concated_str});
 
+    const allocated_str = try concat_str_with_allocator(allocator, init, ", rest of str");
+    std.debug.print("allocated str = {s}\n", .{allocated_str});
+
     const small_str = try std.fmt.allocPrint(allocator, "{s}", .{"small"});
     std.debug.print("small_str={s}\n", .{small_str});
 
@@ -48,6 +51,17 @@ fn concat_str(head: []const u8, rest: []const u8) ![]u8 {
     return try std.fmt.bufPrint(&small_buffer, "{s}{s}", .{ head, rest });
 }
 
-fn another_concat_str(comptime head: []const u8, comptime tail: []const u8) []const u8 {
+fn another_concat_str(
+    comptime head: []const u8,
+    comptime tail: []const u8
+) []const u8 {
     return head ++ tail;
+}
+
+fn concat_str_with_allocator(
+    allocator: std.mem.Allocator, 
+    first: []const u8, 
+    second: []const u8
+) ![]u8 {
+    return std.fmt.allocPrint(allocator, "{s}{s}", .{first, second});
 }
