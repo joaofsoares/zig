@@ -48,7 +48,7 @@ fn add_to_array(
 fn add_str(
     s: []const u8, 
     rest: []const u8
-) ![]u8 {
+) ![]const u8 {
     var inside_buffer: [40]u8 = undefined;
     return try std.fmt.bufPrint(&inside_buffer, "{s}{s}", .{ s, rest });
 }
@@ -57,7 +57,7 @@ fn add_str_buffer(
     buffer: []u8, 
     s: []const u8, 
     rest: []const u8
-) ![]u8 {
+) ![]const u8 {
     return try std.fmt.bufPrint(buffer, "{s}{s}", .{ s, rest });
 }
 
