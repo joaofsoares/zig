@@ -62,6 +62,6 @@ fn concat_str_with_allocator(
     allocator: std.mem.Allocator, 
     first: []const u8, 
     second: []const u8
-) ![]u8 {
+) ![]const u8 {
     return std.fmt.allocPrint(allocator, "{s}{s}", .{first, second});
 }
