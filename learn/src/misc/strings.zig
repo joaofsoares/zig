@@ -23,30 +23,48 @@ pub fn main() !void {
     const concated_str = try concat_str(init, ", rest of str");
     std.debug.print("concated str = {s}\n", .{concated_str});
 
-    const allocated_str = try concat_str_with_allocator(allocator, init, ", rest of str");
+    const allocated_str = try concat_str_with_allocator(
+        allocator, 
+        init, 
+        ", rest of str"
+    );
     std.debug.print("allocated str = {s}\n", .{allocated_str});
 
     const small_str = try std.fmt.allocPrint(allocator, "{s}", .{"small"});
     std.debug.print("small_str={s}\n", .{small_str});
 
-    const another_concat = another_concat_str("hello", " there!");
+    const hello: []const u8 = "hello";
+    const another_concat = another_concat_str(hello, " there!");
     std.debug.print("another_concat={s}\n", .{another_concat});
 }
 
-fn add_to_array(arr: *std.ArrayList(u8), n: u8) !void {
+fn add_to_array(
+    arr: *std.ArrayList(u8), 
+    n: u8
+) !void {
     try arr.append(n);
 }
 
-fn add_str(s: []const u8, rest: []const u8) ![]u8 {
+fn add_str(
+    s: []const u8, 
+    rest: []const u8
+) ![]u8 {
     var inside_buffer: [40]u8 = undefined;
     return try std.fmt.bufPrint(&inside_buffer, "{s}{s}", .{ s, rest });
 }
 
-fn add_str_buffer(buffer: []u8, s: []const u8, rest: []const u8) ![]u8 {
+fn add_str_buffer(
+    buffer: []u8, 
+    s: []const u8, 
+    rest: []const u8
+) ![]u8 {
     return try std.fmt.bufPrint(buffer, "{s}{s}", .{ s, rest });
 }
 
-fn concat_str(head: []const u8, rest: []const u8) ![]u8 {
+fn concat_str(
+    head: []const u8, 
+    rest: []const u8
+) ![]u8 {
     var small_buffer: [50]u8 = undefined;
     return try std.fmt.bufPrint(&small_buffer, "{s}{s}", .{ head, rest });
 }
