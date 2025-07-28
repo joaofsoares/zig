@@ -86,7 +86,7 @@ fn generate_verse(food: Food) []const u8 {
     const regression = generate_regression(food);
     const end_verse = create_end_verse(food);
 
-    _ = std.fmt.bufPrint(&buffer, "{s}{s}{s}{s}", .{ swallowed, action_str, regression, end_verse }) catch "nothing";
+    _ = std.fmt.bufPrint(&buffer, "{s}{s}{s}{s}", .{ swallowed, action_str, regression, end_verse }) catch unreachable;
 
     return buffer[0..(swallowed.len + action_str.len + regression.len + end_verse.len)];
 }

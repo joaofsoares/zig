@@ -11,21 +11,21 @@ pub fn convert(buffer: []u8, n: u32) []const u8 {
     const div_seven = n % 7 == 0;
 
     if (div_three and div_five and div_seven) {
-        return std.fmt.bufPrint(buffer, "{s}", .{"PlingPlangPlong"}) catch "";
+        return std.fmt.bufPrint(buffer, "{s}", .{"PlingPlangPlong"}) catch unreachable;
     } else if (div_three and div_five) {
-        return std.fmt.bufPrint(buffer, "{s}", .{"PlingPlang"}) catch "";
+        return std.fmt.bufPrint(buffer, "{s}", .{"PlingPlang"}) catch unreachable;
     } else if (div_three and div_seven) {
-        return std.fmt.bufPrint(buffer, "{s}", .{"PlingPlong"}) catch "";
+        return std.fmt.bufPrint(buffer, "{s}", .{"PlingPlong"}) catch unreachable;
     } else if (div_five and div_seven) {
-        return std.fmt.bufPrint(buffer, "{s}", .{"PlangPlong"}) catch "";
+        return std.fmt.bufPrint(buffer, "{s}", .{"PlangPlong"}) catch unreachable;
     } else if (div_seven) {
-        return std.fmt.bufPrint(buffer, "{s}", .{"Plong"}) catch "";
+        return std.fmt.bufPrint(buffer, "{s}", .{"Plong"}) catch unreachable;
     } else if (div_five) {
-        return std.fmt.bufPrint(buffer, "{s}", .{"Plang"}) catch "";
+        return std.fmt.bufPrint(buffer, "{s}", .{"Plang"}) catch unreachable;
     } else if (div_three) {
-        return std.fmt.bufPrint(buffer, "{s}", .{"Pling"}) catch "";
+        return std.fmt.bufPrint(buffer, "{s}", .{"Pling"}) catch unreachable;
     } else {
-        return std.fmt.bufPrint(buffer, "{d}", .{n}) catch "";
+        return std.fmt.bufPrint(buffer, "{d}", .{n}) catch unreachable;
     }
 }
 

@@ -15,7 +15,7 @@ pub fn encode(buffer: []u8, string: []const u8) []u8 {
         } else {
             if (cnt > 1) {
                 var buffer_cnt: [3]u8 = undefined;
-                const buffer_str = std.fmt.bufPrint(&buffer_cnt, "{d}", .{cnt}) catch "";
+                const buffer_str = std.fmt.bufPrint(&buffer_cnt, "{d}", .{cnt}) catch unreachable;
                 for (buffer_str) |bs| {
                     buffer[buffer_idx] = bs;
                     buffer_idx += 1;

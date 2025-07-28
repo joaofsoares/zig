@@ -56,8 +56,11 @@ fn calc_full_house(allocator: std.mem.Allocator, dice: [5]u3) u32 {
     defer m.deinit();
 
     for (dice) |die| {
-        const cnt = m.get(die) orelse 0;
-        m.put(die, cnt + 1) catch return 0;
+        if (m.get(die)) |cnt| {
+            m.put(die, cnt + 1) catch unreachable;
+        } else {
+            m.put(die, 1) catch unreachable;
+        }
     }
 
     var has_pair = false;
@@ -86,8 +89,11 @@ fn calc_four_kind(allocator: std.mem.Allocator, dice: [5]u3) u32 {
     defer m.deinit();
 
     for (dice) |die| {
-        const cnt = m.get(die) orelse 0;
-        m.put(die, cnt + 1) catch return 0;
+        if (m.get(die)) |cnt| {
+            m.put(die, cnt + 1) catch unreachable;
+        } else {
+            m.put(die, 1) catch unreachable;
+        }
     }
 
     var four_of_a_kind_value: u32 = 0;
