@@ -2,6 +2,7 @@ const std = @import("std");
 const mem = std.mem;
 const testing = std.testing;
 
+// this version is faster than the C version
 pub fn sum(allocator: mem.Allocator, factors: []const u32, limit: u32) !u64 {
     var exists = std.ArrayList(u32).init(allocator);
     defer exists.deinit();
@@ -17,6 +18,25 @@ pub fn sum(allocator: mem.Allocator, factors: []const u32, limit: u32) !u64 {
                     acc += @as(u64, multiple);
                 }
                 multiple += factor;
+            }
+        }
+    }
+
+    return acc;
+}
+
+pub fn sum_c_version(allocator: mem.Allocator, factors: []const u32, limit: u32) !u64 {
+    _ = allocator;
+
+    var acc: u64 = 0;
+
+    for (0..limit) |i| {
+        check: for (0..factors.len) |j| {
+            if (factors[j] == 0) continue;
+
+            if (i % factors[j] == 0) {
+                acc += @intCast(i);
+                break :check;
             }
         }
     }
