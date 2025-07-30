@@ -2,7 +2,7 @@ const std = @import("std");
 const mem = std.mem;
 const testing = std.testing;
 
-// this version is faster than the C version
+// this version is faster than the raw C version
 pub fn sum(allocator: mem.Allocator, factors: []const u32, limit: u32) !u64 {
     var exists = std.ArrayList(u32).init(allocator);
     defer exists.deinit();
