@@ -19,7 +19,7 @@ pub fn squareRoot(radicand: usize) usize {
             return mid;
         }
 
-        if (square <= radicand) {
+        if (square < radicand) {
             start = mid + 1;
             result = mid;
         } else {
