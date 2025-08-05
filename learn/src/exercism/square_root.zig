@@ -2,7 +2,7 @@ const std = @import("std");
 const testing = std.testing;
 
 pub fn squareRoot(radicand: usize) usize {
-    if (radicand == 0 or radicand == 0) {
+    if (radicand == 0) {
         return radicand;
     }
 
