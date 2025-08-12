@@ -1,45 +1,126 @@
 const std = @import("std");
 const testing = std.testing;
 
-const text_size = 5;
-
 const Clock = struct {
     const Self = @This();
 
-    text: []const u8 = undefined,
+    text: []const u8,
 
-    pub fn init(hour: u32, minute: u32) Self {
-        var total_minutes = (hour * 60 + minute) % (24 * 60);
+    pub fn init(hours: i32, minutes: i32) Self {
+        var total_minutes: i32 = @mod((hours * 60 + minutes), (24 * 60));
 
         if (total_minutes < 0) {
-            total_minutes += 24 * 60;
+            total_minutes += (60 * 24);
         }
 
-        const hours = total_minutes / 60;
-        const minutes = total_minutes % 60;
+        const final_hour: u32 = @intCast(@divTrunc(total_minutes, 60));
+        const final_minutes: u32 = @intCast(@mod(total_minutes, 60));
 
-        const formatted_text = std.fmt.allocPrint(std.heap.page_allocator, "{d:0>2}:{d:0>2}", .{ hours, minutes }) catch {
+        var buffer: [5]u8 = undefined;
+        const result = std.fmt.bufPrint(&buffer, "{d:0>2}:{d:0>2}", .{ final_hour, final_minutes }) catch {
             return Self{ .text = "00:00" };
         };
 
-        return Self{ .text = formatted_text };
-    }
-
-    pub fn deinit(self: Self) void {
-        std.heap.page_allocator.free(self.text);
+        return Self{ .text = result };
     }
 };
 
-test "Clock creation" {
-    const clock = Clock.init(10, 30);
-    try testing.expectEqualStrings("10:30", clock.text);
+test "Clock creation - on the hour" {
+    const clock = Clock.init(8, 0);
+    try testing.expectEqualSlices(u8, "08:00", clock.text);
+}
 
-    const clock2 = Clock.init(25, 61);
-    try testing.expectEqualStrings("02:01", clock2.text);
+test "Clock creation - past the hour" {
+    const clock = Clock.init(11, 9);
+    try testing.expectEqualSlices(u8, "11:09", clock.text);
+}
 
-    const clock3 = Clock.init(8, 0);
-    try testing.expectEqualStrings("08:00", clock3.text);
+test "Clock creation - midnight" {
+    const clock = Clock.init(24, 0);
+    try testing.expectEqualSlices(u8, "00:00", clock.text);
+}
 
-    const clock4 = Clock.init(0, 1723);
-    try testing.expectEqualStrings("04:43", clock4.text);
+test "Clock creation - hour rolls over" {
+    const clock = Clock.init(25, 0);
+    try testing.expectEqualSlices(u8, "01:00", clock.text);
+}
+
+test "Clock creation - hour rolls over continously" {
+    const clock = Clock.init(100, 0);
+    try testing.expectEqualSlices(u8, "04:00", clock.text);
+}
+
+test "Clock creation - sixty minutes is next hour" {
+    const clock = Clock.init(1, 60);
+    try testing.expectEqualSlices(u8, "02:00", clock.text);
+}
+
+test "Clock creation - minutes roll over" {
+    const clock = Clock.init(0, 160);
+    try testing.expectEqualSlices(u8, "02:40", clock.text);
+}
+
+test "Clock creation - minutes roll over continously" {
+    const clock = Clock.init(0, 1723);
+    try testing.expectEqualSlices(u8, "04:43", clock.text);
+}
+
+test "Clock creation - hour and minutes roll over" {
+    const clock = Clock.init(25, 160);
+    try testing.expectEqualSlices(u8, "03:40", clock.text);
+}
+
+test "Clock creation - hour and minutes roll over constinously" {
+    const clock = Clock.init(201, 3001);
+    try testing.expectEqualSlices(u8, "11:01", clock.text);
+}
+
+test "Clock creation - hour and minutes roll over to exactly midnight" {
+    const clock = Clock.init(72, 8640);
+    try testing.expectEqualSlices(u8, "00:00", clock.text);
+}
+
+test "Clock creation - negative hour" {
+    const clock = Clock.init(-1, 15);
+    try testing.expectEqualSlices(u8, "23:15", clock.text);
+}
+
+test "Clock creation - negative hour rolls over" {
+    const clock = Clock.init(-25, 0);
+    try testing.expectEqualSlices(u8, "23:00", clock.text);
+}
+
+test "Clock creation - negative hour rolls over continously" {
+    const clock = Clock.init(-91, 0);
+    try testing.expectEqualSlices(u8, "05:00", clock.text);
+}
+
+test "Clock creation - negative minutes" {
+    const clock = Clock.init(1, -40);
+    try testing.expectEqualSlices(u8, "00:20", clock.text);
+}
+
+test "Clock creation - negative minutes roll over" {
+    const clock = Clock.init(1, -160);
+    try testing.expectEqualSlices(u8, "22:20", clock.text);
+}
+
+test "Clock creation - negative minutes roll over continously" {
+    const clock = Clock.init(1, -4820);
+    try testing.expectEqualSlices(u8, "16:40", clock.text);
+}
+
+test "Clock creation - negative sixty minutes is previous hour" {
+    const clock = Clock.init(2, -60);
+    try testing.expectEqualSlices(u8, "01:00", clock.text);
+}
+
+test "Clock creation - negative hour and minutes both roll over" {
+    const clock = Clock.init(-25, -160);
+    try testing.expectEqualSlices(u8, "20:20", clock.text);
+}
+
+test "Clock creation - negative hour and minutes both roll over continously" {
+    const clock = Clock.init(-121, -5810);
+    try testing.expectEqualSlices(u8, "22:10", clock.text);
 }
