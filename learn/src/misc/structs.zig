@@ -1,5 +1,9 @@
 const std = @import("std");
 
+const Numbers = struct {
+    x: i32,
+};
+
 const Person = struct {
     const Self = @This();
 
@@ -22,4 +26,9 @@ pub fn main() void {
     std.debug.print("Name: {s}, Age: {d}\n", .{ p1.name, p1.age });
     p1.inc_year_by_one();
     std.debug.print("Name: {s}, Age: {d}\n", .{ p1.name, p1.age });
+
+    var num = Numbers{ .x = 10 };
+    std.debug.print("Num X = {d}\n", .{num.x});
+    num.x = 20;
+    std.debug.print("Num X = {d}\n", .{num.x});
 }
