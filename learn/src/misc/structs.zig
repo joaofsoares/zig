@@ -5,8 +5,6 @@ const Numbers = struct {
 };
 
 const Person = struct {
-    const Self = @This();
-
     name: []const u8,
     age: u32,
 
@@ -14,7 +12,7 @@ const Person = struct {
         return .{ .name = name, .age = age };
     }
 
-    fn inc_year_by_one(self: *Self) void {
+    fn inc_year_by_one(self: *Person) void {
         self.age += 1;
     }
 };
@@ -25,6 +23,8 @@ pub fn main() void {
     p1.age = 2;
     std.debug.print("Name: {s}, Age: {d}\n", .{ p1.name, p1.age });
     p1.inc_year_by_one();
+    std.debug.print("Name: {s}, Age: {d}\n", .{ p1.name, p1.age });
+    p1.name = "Bar";
     std.debug.print("Name: {s}, Age: {d}\n", .{ p1.name, p1.age });
 
     var num = Numbers{ .x = 10 };
