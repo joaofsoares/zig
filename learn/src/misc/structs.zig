@@ -8,12 +8,16 @@ const Person = struct {
     name: []const u8,
     age: u32,
 
-    fn create(name: []const u8, age: u32) Person {
+    pub fn create(name: []const u8, age: u32) Person {
         return .{ .name = name, .age = age };
     }
 
-    fn inc_year_by_one(self: *Person) void {
+    pub fn inc_year_by_one(self: *Person) void {
         self.age += 1;
+    }
+
+    pub fn set_name(self: *Person, new_name: []const u8) void {
+        self.name = new_name;
     }
 };
 
@@ -24,7 +28,7 @@ pub fn main() void {
     std.debug.print("Name: {s}, Age: {d}\n", .{ p1.name, p1.age });
     p1.inc_year_by_one();
     std.debug.print("Name: {s}, Age: {d}\n", .{ p1.name, p1.age });
-    p1.name = "Bar";
+    p1.set_name("Bar");
     std.debug.print("Name: {s}, Age: {d}\n", .{ p1.name, p1.age });
 
     var num = Numbers{ .x = 10 };
