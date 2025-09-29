@@ -22,20 +22,20 @@ fn pascal_triangle(allocator: std.mem.Allocator, count: usize) std.mem.Allocator
         return try allocator.alloc([]u128, count);
     }
 
-    var mat = std.ArrayList([]u128).init(allocator);
+    var mat: std.ArrayList([]u128) = .empty;
 
     for (0..count) |row| {
-        var arr = std.ArrayList(u128).init(allocator);
+        var arr: std.ArrayList(u128) = .empty;
 
         for (0..(row + 1)) |i| {
             if (row == i or i == 0) {
-                try arr.append(1);
+                try arr.append(allocator, 1);
             } else {
-                try arr.append(mat.items[row - 1][i - 1] + mat.items[row - 1][i]);
+                try arr.append(allocator, mat.items[row - 1][i - 1] + mat.items[row - 1][i]);
             }
         }
 
-        try mat.append(arr.items);
+        try mat.append(allocator, arr.items);
     }
 
     return mat.items;

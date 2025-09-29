@@ -7,7 +7,7 @@ pub fn three_sum(allocator: std.mem.Allocator, comptime T: type, numbers: []cons
     const sorted_numbers = try sort_numbers(T, allocator, numbers);
     defer allocator.free(sorted_numbers);
 
-    var result = std.ArrayList([]T).init(allocator);
+    var result: std.ArrayList([]T) = .empty;
 
     for (0..sorted_numbers.len - 2) |i| {
         if (i > 0 and sorted_numbers[i] == sorted_numbers[i - 1]) continue;
@@ -19,11 +19,11 @@ pub fn three_sum(allocator: std.mem.Allocator, comptime T: type, numbers: []cons
             const sum = sorted_numbers[i] + sorted_numbers[left] + sorted_numbers[right];
 
             if (sum == 0) {
-                var tmp_arr = std.ArrayList(T).init(allocator);
-                try tmp_arr.append(sorted_numbers[i]);
-                try tmp_arr.append(sorted_numbers[left]);
-                try tmp_arr.append(sorted_numbers[right]);
-                try result.append(try tmp_arr.toOwnedSlice());
+                var tmp_arr: std.ArrayList(T) = .empty;
+                try tmp_arr.append(allocator, sorted_numbers[i]);
+                try tmp_arr.append(allocator, sorted_numbers[left]);
+                try tmp_arr.append(allocator, sorted_numbers[right]);
+                try result.append(allocator, try tmp_arr.toOwnedSlice(allocator));
 
                 left += 1;
                 right -= 1;
@@ -39,7 +39,7 @@ pub fn three_sum(allocator: std.mem.Allocator, comptime T: type, numbers: []cons
         }
     }
 
-    return result.toOwnedSlice();
+    return result.toOwnedSlice(allocator);
 }
 
 fn sort_numbers(comptime T: type, allocator: std.mem.Allocator, numbers: []const T) ![]T {

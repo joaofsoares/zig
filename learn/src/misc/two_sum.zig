@@ -15,13 +15,13 @@ pub fn two_sum(nums: []const i8, target: i8) ![]usize {
     var m = std.AutoArrayHashMap(i32, usize).init(allocator);
     defer m.deinit();
 
-    var arr = std.ArrayList(usize).init(allocator);
-    defer arr.deinit();
+    var arr: std.ArrayList(usize) = .empty;
+    defer arr.deinit(allocator);
 
     for (nums, 0..) |n, i| {
         if (m.get(n)) |idx| {
-            try arr.appendSlice(&.{ idx, i });
-            return arr.toOwnedSlice();
+            try arr.appendSlice(allocator, &.{ idx, i });
+            return arr.toOwnedSlice(allocator);
         } else {
             try m.put(target - n, i);
         }
