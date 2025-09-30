@@ -3,58 +3,58 @@ const mem = std.mem;
 const testing = std.testing;
 
 pub fn toRoman(allocator: mem.Allocator, arabicNumeral: i16) mem.Allocator.Error![]u8 {
-    var arr = std.ArrayList(u8).init(allocator);
-    defer arr.deinit();
+    var arr: std.ArrayList(u8) = .empty;
+    defer arr.deinit(allocator);
 
-    try create_roman_number(&arr, arabicNumeral);
+    try create_roman_number(allocator, &arr, arabicNumeral);
 
-    return arr.toOwnedSlice();
+    return arr.toOwnedSlice(allocator);
 }
 
-fn create_roman_number(arr: *std.ArrayList(u8), arabic_number: i16) !void {
+fn create_roman_number(allocator: std.mem.Allocator, arr: *std.ArrayList(u8), arabic_number: i16) !void {
     if (arabic_number < 1 or arabic_number > 3999) {
         return;
     }
 
     if (arabic_number >= 1000) {
-        try arr.appendSlice("M");
-        try create_roman_number(arr, arabic_number - 1000);
+        try arr.appendSlice(allocator, "M");
+        try create_roman_number(allocator, arr, arabic_number - 1000);
     } else if (arabic_number >= 900) {
-        try arr.appendSlice("CM");
-        try create_roman_number(arr, arabic_number - 900);
+        try arr.appendSlice(allocator, "CM");
+        try create_roman_number(allocator, arr, arabic_number - 900);
     } else if (arabic_number >= 500) {
-        try arr.appendSlice("D");
-        try create_roman_number(arr, arabic_number - 500);
+        try arr.appendSlice(allocator, "D");
+        try create_roman_number(allocator, arr, arabic_number - 500);
     } else if (arabic_number >= 400) {
-        try arr.appendSlice("CD");
-        try create_roman_number(arr, arabic_number - 400);
+        try arr.appendSlice(allocator, "CD");
+        try create_roman_number(allocator, arr, arabic_number - 400);
     } else if (arabic_number >= 100) {
-        try arr.appendSlice("C");
-        try create_roman_number(arr, arabic_number - 100);
+        try arr.appendSlice(allocator, "C");
+        try create_roman_number(allocator, arr, arabic_number - 100);
     } else if (arabic_number >= 90) {
-        try arr.appendSlice("XC");
-        try create_roman_number(arr, arabic_number - 90);
+        try arr.appendSlice(allocator, "XC");
+        try create_roman_number(allocator, arr, arabic_number - 90);
     } else if (arabic_number >= 50) {
-        try arr.appendSlice("L");
-        try create_roman_number(arr, arabic_number - 50);
+        try arr.appendSlice(allocator, "L");
+        try create_roman_number(allocator, arr, arabic_number - 50);
     } else if (arabic_number >= 40) {
-        try arr.appendSlice("XL");
-        try create_roman_number(arr, arabic_number - 40);
+        try arr.appendSlice(allocator, "XL");
+        try create_roman_number(allocator, arr, arabic_number - 40);
     } else if (arabic_number >= 10) {
-        try arr.appendSlice("X");
-        try create_roman_number(arr, arabic_number - 10);
+        try arr.appendSlice(allocator, "X");
+        try create_roman_number(allocator, arr, arabic_number - 10);
     } else if (arabic_number >= 9) {
-        try arr.appendSlice("IX");
-        try create_roman_number(arr, arabic_number - 9);
+        try arr.appendSlice(allocator, "IX");
+        try create_roman_number(allocator, arr, arabic_number - 9);
     } else if (arabic_number >= 5) {
-        try arr.appendSlice("V");
-        try create_roman_number(arr, arabic_number - 5);
+        try arr.appendSlice(allocator, "V");
+        try create_roman_number(allocator, arr, arabic_number - 5);
     } else if (arabic_number >= 4) {
-        try arr.appendSlice("IV");
-        try create_roman_number(arr, arabic_number - 4);
+        try arr.appendSlice(allocator, "IV");
+        try create_roman_number(allocator, arr, arabic_number - 4);
     } else if (arabic_number >= 1) {
-        try arr.appendSlice("I");
-        try create_roman_number(arr, arabic_number - 1);
+        try arr.appendSlice(allocator, "I");
+        try create_roman_number(allocator, arr, arabic_number - 1);
     }
 }
 

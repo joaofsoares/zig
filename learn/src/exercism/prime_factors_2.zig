@@ -3,11 +3,11 @@ const mem = std.mem;
 const testing = std.testing;
 
 pub fn factors(allocator: mem.Allocator, value: u64) mem.Allocator.Error![]u64 {
-    var result = std.ArrayList(u64).init(allocator);
-    errdefer result.deinit();
+    var result: std.ArrayList(u64) = .empty;
+    errdefer result.deinit(allocator);
 
     if (value <= 1) {
-        return result.toOwnedSlice();
+        return result.toOwnedSlice(allocator);
     }
 
     var tmp_value = value;
@@ -16,18 +16,18 @@ pub fn factors(allocator: mem.Allocator, value: u64) mem.Allocator.Error![]u64 {
     while (tmp_value > 1) {
         while (tmp_value % divisor == 0) {
             tmp_value = tmp_value / divisor;
-            try result.append(divisor);
+            try result.append(allocator, divisor);
         }
 
         divisor += if (divisor == 2) 1 else 2;
 
         if (divisor * divisor > tmp_value and tmp_value > 1) {
-            try result.append(tmp_value);
+            try result.append(allocator, tmp_value);
             break;
         }
     }
 
-    return result.toOwnedSlice();
+    return result.toOwnedSlice(allocator);
 }
 
 test "no factors" {

@@ -4,8 +4,8 @@ const testing = std.testing;
 
 // this version is faster than the raw C version
 pub fn sum(allocator: mem.Allocator, factors: []const u32, limit: u32) !u64 {
-    var exists = std.ArrayList(u32).init(allocator);
-    defer exists.deinit();
+    var exists: std.ArrayList(u32) = .empty;
+    defer exists.deinit(allocator);
 
     var acc: u64 = 0;
 
@@ -14,7 +14,7 @@ pub fn sum(allocator: mem.Allocator, factors: []const u32, limit: u32) !u64 {
             var multiple = factor;
             while (multiple < limit) {
                 if (std.mem.count(u32, exists.items, &[_]u32{multiple}) == 0) {
-                    try exists.append(multiple);
+                    try exists.append(allocator, multiple);
                     acc += @as(u64, multiple);
                 }
                 multiple += factor;

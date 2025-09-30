@@ -10,8 +10,8 @@ pub fn isBalanced(allocator: mem.Allocator, s: []const u8) !bool {
     try map.put('}', '{');
     try map.put(']', '[');
 
-    var brackets = std.ArrayList(u8).init(allocator);
-    defer brackets.deinit();
+    var brackets: std.ArrayList(u8) = .empty;
+    defer brackets.deinit(allocator);
 
     for (s) |c| {
         if (c == ']' or c == '}' or c == ')') {
@@ -27,7 +27,7 @@ pub fn isBalanced(allocator: mem.Allocator, s: []const u8) !bool {
                 return false;
             }
         } else if (c == '[' or c == '{' or c == '(') {
-            try brackets.append(c);
+            try brackets.append(allocator, c);
         }
     }
 

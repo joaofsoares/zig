@@ -3,19 +3,19 @@ const mem = std.mem;
 const fmt = std.fmt;
 const testing = std.testing;
 
-pub fn recite(allocator: mem.Allocator, words: []const []const u8) (fmt.AllocPrintError || mem.Allocator.Error)![][]u8 {
-    var arr = std.ArrayList([]u8).init(allocator);
+pub fn recite(allocator: mem.Allocator, words: []const []const u8) mem.Allocator.Error![][]u8 {
+    var arr: std.ArrayList([]u8) = .empty;
 
     if (words.len > 0) {
         var cnt: usize = 0;
         while ((cnt + 1) < words.len) : (cnt += 1) {
-            try arr.append(try create_str(allocator, words[cnt], words[cnt + 1]));
+            try arr.append(allocator, try create_str(allocator, words[cnt], words[cnt + 1]));
         }
 
-        try arr.append(try create_last_str(allocator, words[0]));
+        try arr.append(allocator, try create_last_str(allocator, words[0]));
     }
 
-    return arr.toOwnedSlice();
+    return arr.toOwnedSlice(allocator);
 }
 
 fn create_str(allocator: mem.Allocator, f: []const u8, l: []const u8) ![]u8 {

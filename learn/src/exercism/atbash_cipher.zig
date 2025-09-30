@@ -6,8 +6,8 @@ pub fn encode(allocator: mem.Allocator, s: []const u8) mem.Allocator.Error![]u8 
     var alphabet = std.AutoHashMap(u8, u8).init(allocator);
     defer alphabet.deinit();
 
-    var result = std.ArrayList(u8).init(allocator);
-    defer result.deinit();
+    var result: std.ArrayList(u8) = .empty;
+    defer result.deinit(allocator);
 
     try generate_alphabet(&alphabet, false);
 
@@ -16,9 +16,9 @@ pub fn encode(allocator: mem.Allocator, s: []const u8) mem.Allocator.Error![]u8 
     for (s) |c| {
         if (std.ascii.isAlphabetic(c)) {
             const letter = alphabet.get(std.ascii.toLower(c)) orelse continue;
-            try result.append(letter);
+            try result.append(allocator, letter);
         } else if (std.ascii.isDigit(c)) {
-            try result.append(c);
+            try result.append(allocator, c);
         } else {
             continue;
         }
@@ -26,7 +26,7 @@ pub fn encode(allocator: mem.Allocator, s: []const u8) mem.Allocator.Error![]u8 
         cnt += 1;
 
         if (cnt == 5) {
-            try result.append(' ');
+            try result.append(allocator, ' ');
             cnt = 0;
         }
     }
@@ -35,24 +35,24 @@ pub fn encode(allocator: mem.Allocator, s: []const u8) mem.Allocator.Error![]u8 
         _ = result.pop();
     }
 
-    return result.toOwnedSlice();
+    return result.toOwnedSlice(allocator);
 }
 
 pub fn decode(allocator: mem.Allocator, s: []const u8) mem.Allocator.Error![]u8 {
     var alphabet = std.AutoHashMap(u8, u8).init(allocator);
     defer alphabet.deinit();
 
-    var result = std.ArrayList(u8).init(allocator);
-    defer result.deinit();
+    var result: std.ArrayList(u8) = .empty;
+    defer result.deinit(allocator);
 
     try generate_alphabet(&alphabet, true);
 
     for (s) |c| {
         if (std.ascii.isAlphabetic(c)) {
             const letter = alphabet.get(std.ascii.toLower(c)) orelse continue;
-            try result.append(letter);
+            try result.append(allocator, letter);
         } else if (std.ascii.isDigit(c)) {
-            try result.append(c);
+            try result.append(allocator, c);
         } else {
             continue;
         }
@@ -62,7 +62,7 @@ pub fn decode(allocator: mem.Allocator, s: []const u8) mem.Allocator.Error![]u8 
         _ = result.pop();
     }
 
-    return result.toOwnedSlice();
+    return result.toOwnedSlice(allocator);
 }
 
 fn generate_alphabet(alphabet: *std.AutoHashMap(u8, u8), reverse: bool) !void {

@@ -3,8 +3,8 @@ const mem = std.mem;
 const testing = std.testing;
 
 pub fn abbreviate(allocator: mem.Allocator, comptime words: []const u8) mem.Allocator.Error![]u8 {
-    var result = std.ArrayList(u8).init(allocator);
-    defer result.deinit();
+    var result: std.ArrayList(u8) = .empty;
+    defer result.deinit(allocator);
 
     var formatted_word: [words.len]u8 = undefined;
     _ = std.mem.replace(u8, words, "-", " ", formatted_word[0..]);
@@ -15,10 +15,10 @@ pub fn abbreviate(allocator: mem.Allocator, comptime words: []const u8) mem.Allo
     while (word_split.next()) |word| {
         if (word.len == 0) continue;
 
-        try result.append(std.ascii.toUpper(word[0]));
+        try result.append(allocator, std.ascii.toUpper(word[0]));
     }
 
-    return result.toOwnedSlice();
+    return result.toOwnedSlice(allocator);
 }
 
 test "basic" {

@@ -14,7 +14,7 @@ pub fn convert(
     input_base: u32,
     output_base: u32,
 ) (mem.Allocator.Error || ConversionError)![]u32 {
-    var arr = std.ArrayList(u32).init(allocator);
+    var arr: std.ArrayList(u32) = .empty;
 
     if (check_base(input_base) == false) {
         return ConversionError.InvalidInputBase;
@@ -23,8 +23,8 @@ pub fn convert(
     }
 
     if (digits.len == 0) {
-        try arr.append(0);
-        return try arr.toOwnedSlice();
+        try arr.append(allocator, 0);
+        return try arr.toOwnedSlice(allocator);
     }
 
     var cnt: usize = digits.len;
@@ -43,13 +43,13 @@ pub fn convert(
     }
 
     if (tmp == 0) {
-        try arr.append(0);
-        return arr.toOwnedSlice();
+        try arr.append(allocator, 0);
+        return arr.toOwnedSlice(allocator);
     }
 
-    try convert_to(&arr, output_base, tmp);
+    try convert_to(allocator, &arr, output_base, tmp);
 
-    return arr.toOwnedSlice();
+    return arr.toOwnedSlice(allocator);
 }
 
 fn check_base(b: u32) bool {
@@ -57,6 +57,7 @@ fn check_base(b: u32) bool {
 }
 
 fn convert_to(
+    allocator: std.mem.Allocator,
     arr: *std.ArrayList(u32),
     output_base: u32,
     value: u32,
@@ -65,7 +66,7 @@ fn convert_to(
 
     while (tmp > 0) {
         const digit = tmp % output_base;
-        try arr.append(digit);
+        try arr.append(allocator, digit);
         tmp /= output_base;
     }
 

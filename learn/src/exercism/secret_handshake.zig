@@ -10,8 +10,8 @@ const Signal = enum {
 };
 
 pub fn calculateHandshake(allocator: mem.Allocator, number: u5) mem.Allocator.Error![]const Signal {
-    var arr = std.ArrayList(Signal).init(allocator);
-    defer arr.deinit();
+    var arr: std.ArrayList(Signal) = .empty;
+    defer arr.deinit(allocator);
 
     const binary_string = try std.fmt.allocPrint(allocator, "{b}", .{number});
     defer allocator.free(binary_string);
@@ -22,10 +22,10 @@ pub fn calculateHandshake(allocator: mem.Allocator, number: u5) mem.Allocator.Er
     while (cnt > 0) {
         if (binary_string[cnt - 1] == '1') {
             switch (decimal) {
-                1 => try arr.append(.wink),
-                10 => try arr.append(.double_blink),
-                100 => try arr.append(.close_your_eyes),
-                1000 => try arr.append(.jump),
+                1 => try arr.append(allocator, .wink),
+                10 => try arr.append(allocator, .double_blink),
+                100 => try arr.append(allocator, .close_your_eyes),
+                1000 => try arr.append(allocator, .jump),
                 else => std.mem.reverse(Signal, arr.items),
             }
         }
@@ -34,7 +34,7 @@ pub fn calculateHandshake(allocator: mem.Allocator, number: u5) mem.Allocator.Er
         cnt -= 1;
     }
 
-    return arr.toOwnedSlice();
+    return arr.toOwnedSlice(allocator);
 }
 
 test "wink for 1" {
