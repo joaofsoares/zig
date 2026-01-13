@@ -12,9 +12,9 @@ pub fn square(index: usize) ChessboardError!u64 {
             grains = grains * 2;
         }
         return grains;
-    } else {
-        return ChessboardError.IndexOutOfBounds;
     }
+
+    return ChessboardError.IndexOutOfBounds;
 }
 
 pub fn total() u64 {
