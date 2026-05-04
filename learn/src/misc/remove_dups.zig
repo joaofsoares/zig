@@ -8,9 +8,7 @@ pub fn remove_all(allocator: std.mem.Allocator, input: []const u8) std.mem.Alloc
 
     const next = try remove_simple(allocator, first);
 
-    if (std.mem.eql(u8, first, next)) {
-        return next;
-    } else {
+    if (!std.mem.eql(u8, first, next)) {
         defer allocator.free(next);
 
         var tmp_first = first;
@@ -25,6 +23,8 @@ pub fn remove_all(allocator: std.mem.Allocator, input: []const u8) std.mem.Alloc
 
         return tmp_next;
     }
+
+    return next;
 }
 
 // remove simple subsequent characters in range of characters
