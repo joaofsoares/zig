@@ -28,7 +28,7 @@ pub fn remove_all(allocator: std.mem.Allocator, input: []const u8) std.mem.Alloc
 }
 
 // remove simple subsequent characters in range of characters
-pub fn remove_simple(allocator: std.mem.Allocator, input: []const u8) std.mem.Allocator.Error![]u8 {
+fn remove_simple(allocator: std.mem.Allocator, input: []const u8) std.mem.Allocator.Error![]u8 {
     const input_size = input.len;
 
     var acc: std.ArrayList(u8) = .empty;
